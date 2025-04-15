@@ -26,6 +26,12 @@ $(document).ready(function() {
                         return data;
                     }
                 }
+            },
+            {
+                data: null,
+                render: function(data, type, row) {
+                    return '<button class="btn btn-sm btn-info view-details">查看詳情</button>';
+                }
             }
         ],
         pageLength: 10,
@@ -43,6 +49,23 @@ $(document).ready(function() {
                 "previous": "上一頁"
             }
         }
+    });
+    
+    // 詳細資訊查看功能
+    $('#results-table tbody').on('click', 'button.view-details', function() {
+        var data = table.row($(this).parents('tr')).data();
+        
+        // 填充模態視窗資料
+        $('#modal-model').text(data.recommended_model);
+        $('#modal-area').text(data.area + "坪");
+        $('#modal-capacity').text(data.recommended_capacity);
+        $('#modal-environment').text(data.environment || "一般環境");
+        $('#modal-specs').text(data.specs || "標準規格冷氣機");
+        $('#modal-image').attr('src', data.image_url || "https://via.placeholder.com/300x200?text=無商品圖片");
+        
+        // 顯示模態視窗
+        var productModal = new bootstrap.Modal(document.getElementById('productModal'));
+        productModal.show();
     });
     
     // 坪數滑桿
@@ -75,9 +98,13 @@ $(document).ready(function() {
         if ($('#env5').is(':checked')) envConditions.push('動態活動');
         if ($('#env6').is(':checked')) envConditions.push('其他熱源');
         
-        // 應用環境條件篩選 (簡化版)
+        // 應用環境條件篩選
         if (envConditions.length > 0) {
-            table.column(2).search(envConditions.join('|'), true, false).draw();
+            var regex = '';
+            for (var i = 0; i < envConditions.length; i++) {
+                regex += '(?=.*' + envConditions[i] + ')';
+            }
+            table.column(2).search(regex, true, false).draw();
         }
     });
 });
