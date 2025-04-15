@@ -5,89 +5,314 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>冷氣能力計算器</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #f8f9fa;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --accent: #1abc9c;
+            --danger: #e74c3c;
+            --light-bg: #ecf0f1;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
         body { 
             padding-top: 20px; 
-            font-family: "微軟正黑體", Arial, sans-serif;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: var(--text);
+            background-color: var(--light-bg);
+            line-height: 1.6;
         }
-        .filter-card { 
-            background-color: #f8f9fa; 
-            padding: 15px; 
-            border-radius: 5px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #0056b3;
-            font-weight: bold;
-        }
-        h4 {
-            color: #0056b3;
-            margin-bottom: 15px;
-        }
-        .btn-primary {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-        .btn-primary:hover {
-            background-color: #003d82;
-            border-color: #003d82;
-        }
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        
+        .page-container {
+            max-width: 1140px;
+            margin: 0 auto;
             padding: 20px;
-            margin-top: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
         }
-        .product-image {
-            width: 100%;
-            border-radius: 5px;
-            margin-bottom: 15px;
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
-        .product-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0056b3;
+        
+        .app-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .app-subtitle {
+            color: var(--text-light);
+            font-weight: 400;
+            font-size: 1.1rem;
+        }
+        
+        .filter-card { 
+            background-color: var(--secondary);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary);
+        }
+        
+        .filter-title {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        
+        .form-range {
+            height: 8px;
+        }
+        
+        .form-range::-webkit-slider-thumb {
+            background: var(--primary);
+        }
+        
+        .form-select {
+            border: 1px solid #ced4da;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .condition-section {
+            margin-top: 15px;
+        }
+        
+        .form-check {
+            margin-bottom: 10px;
+            padding-left: 30px;
+        }
+        
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 4px;
+            margin-left: -30px;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .form-check-label {
+            font-size: 15px;
+        }
+        
+        .search-btn {
+            background-color: var(--primary);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
             margin-top: 10px;
         }
-        .capacity-badge {
-            background-color: #0056b3;
+        
+        .search-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        .search-btn i {
+            margin-right: 8px;
+        }
+        
+        .result-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            padding: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .result-heading {
+            background-color: var(--primary);
             color: white;
-            padding: 5px 10px;
+            padding: 15px 20px;
+            margin: 0;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .result-content {
+            padding: 25px;
+        }
+        
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            transition: transform 0.5s;
+            border-radius: 8px;
+        }
+        
+        .product-image:hover {
+            transform: scale(1.03);
+        }
+        
+        .capacity-badge {
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
-            margin-bottom: 10px;
+            font-weight: 600;
             display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(26, 188, 156, 0.3);
         }
-        .result-heading {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+        
+        .model-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 5px;
             margin-bottom: 20px;
         }
+        
         .result-hidden {
             display: none;
+        }
+        
+        .no-results-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .no-results-icon {
+            font-size: 48px;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+        
+        .no-results-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+        
+        .no-results-text {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+        
+        .contact-btn {
+            background-color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .contact-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .pill {
+            display: inline-block;
+            padding: 4px 12px;
+            margin-right: 5px;
+            margin-bottom: 8px;
+            border-radius: 20px;
+            font-size: 13px;
+            background-color: #edf2f7;
+            color: var(--text);
+        }
+        
+        .range-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 15px;
+            }
+            
+            .filter-card {
+                margin-bottom: 20px;
+            }
+            
+            .result-content {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mb-4">冷氣能力計算結果查詢系統</h1>
-        <p class="text-center mb-4">查詢不同坪數、高度和環境條件下的冷氣機推薦</p>
+    <div class="page-container">
+        <div class="header-section">
+            <h1 class="app-title">冷氣能力計算結果查詢系統</h1>
+            <p class="app-subtitle">查詢不同坪數、高度和環境條件下的冷氣機推薦</p>
+        </div>
         
         <div class="row">
             <div class="col-md-4">
                 <div class="filter-card">
-                    <h4>篩選條件</h4>
+                    <h4 class="filter-title"><i class="fas fa-sliders-h me-2"></i>篩選條件</h4>
                     
-                    <div class="mb-3">
-                        <label for="area-range" class="form-label">坪數: <span id="area-value">10</span></label>
+                    <div class="mb-4">
+                        <label for="area-range" class="form-label">坪數: <span id="area-value" class="range-value">10</span></label>
                         <input type="range" class="form-range" id="area-range" min="1" max="25" value="10" step="1">
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label">高度:</label>
+                    <div class="mb-4">
+                        <label for="height-select" class="form-label">高度:</label>
                         <select id="height-select" class="form-select">
                             <option value="一般高度" selected>一般高度</option>
                             <option value="挑高(超過3m)">挑高(超過3m)</option>
@@ -95,7 +320,7 @@
                         </select>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="condition-section">
                         <label class="form-label">環境條件:</label>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="env1">
@@ -123,28 +348,44 @@
                         </div>
                     </div>
                     
-                    <button id="search-btn" class="btn btn-primary w-100">搜尋</button>
+                    <button id="search-btn" class="btn search-btn w-100">
+                        <i class="fas fa-search"></i>搜尋最佳冷氣機
+                    </button>
                 </div>
             </div>
             
             <div class="col-md-8">
-                <div id="results-container" class="result-hidden">
-                    <h4 class="result-heading">計算結果</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img id="result-image" src="" class="product-image" alt="冷氣機產品圖">
-                        </div>
-                        <div class="col-md-6">
-                            <div class="capacity-badge">計算能力: <span id="result-capacity"></span> kW</div>
-                            <h5 class="product-title" id="result-model"></h5>
+                <div id="results-container" class="result-container result-hidden">
+                    <h4 class="result-heading"><i class="fas fa-check-circle me-2"></i>計算結果</h4>
+                    <div class="result-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-image-container">
+                                    <img id="result-image" src="" class="product-image" alt="冷氣機產品圖">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="capacity-badge">
+                                    <i class="fas fa-bolt me-1"></i>計算能力: <span id="result-capacity"></span> kW
+                                </div>
+                                <h2 class="model-title" id="result-model"></h2>
+                                <div id="selected-options" class="mb-3">
+                                    <!-- 動態生成選擇條件 -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div id="no-results" class="text-center p-5 result-hidden">
-                    <h4>您目前的需求需要專業協助</h4>
-                    <p>所選條件較為特殊，建議由專業人員進行現場評估。</p>
-                    <button class="btn btn-primary">聯絡專員</button>
+                <div id="no-results" class="no-results-container result-hidden">
+                    <div class="no-results-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h4 class="no-results-title">您目前的需求需要專業協助</h4>
+                    <p class="no-results-text">所選條件較為特殊，建議由專業人員進行現場評估以確保最佳選擇。</p>
+                    <button class="btn contact-btn">
+                        <i class="fas fa-headset me-2"></i>聯絡專員
+                    </button>
                 </div>
             </div>
         </div>
@@ -168,6 +409,15 @@
                 area: 5, 
                 height: "一般高度", 
                 environment: "東西曬", 
+                capacity: 3.9, 
+                recommended_capacity: 4.2, 
+                recommended_model: "FOR-351HA32FIWR-351HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-351HA32"
+            },
+            {
+                area: 5, 
+                height: "挑高(超過3m)", 
+                environment: "無", 
                 capacity: 3.9, 
                 recommended_capacity: 4.2, 
                 recommended_model: "FOR-351HA32FIWR-351HA32",
@@ -201,6 +451,33 @@
                 image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32"
             },
             {
+                area: 10, 
+                height: "一般高度", 
+                environment: "東西曬, 頂樓或鐵皮", 
+                capacity: 8.8, 
+                recommended_capacity: 10.5, 
+                recommended_model: "FOR-105HV32FIWR-105HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32"
+            },
+            {
+                area: 10, 
+                height: "一般高度", 
+                environment: "大片落地窗, 人員密度高, 動態活動", 
+                capacity: 9.1, 
+                recommended_capacity: 10.5, 
+                recommended_model: "FOR-105HV32FIWR-105HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32"
+            },
+            {
+                area: 10, 
+                height: "挑高(超過3m)", 
+                environment: "無", 
+                capacity: 7.7, 
+                recommended_capacity: 8.0, 
+                recommended_model: "FOR-701HA32FIWR-701HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-701HA32"
+            },
+            {
                 area: 15, 
                 height: "一般高度", 
                 environment: "無", 
@@ -210,6 +487,24 @@
                 image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32"
             },
             {
+                area: 15, 
+                height: "一般高度", 
+                environment: "東西曬, 頂樓或鐵皮", 
+                capacity: 13.1, 
+                recommended_capacity: 14.8, 
+                recommended_model: "FOR-142HV32FIWR-142HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-142HV32"
+            },
+            {
+                area: 15, 
+                height: "挑高(超過3m)", 
+                environment: "無", 
+                capacity: 11.6, 
+                recommended_capacity: 11.8, 
+                recommended_model: "FOR-116HV32FIWR-116HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-116HV32"
+            },
+            {
                 area: 20, 
                 height: "一般高度", 
                 environment: "無", 
@@ -217,6 +512,24 @@
                 recommended_capacity: 14.8, 
                 recommended_model: "FOR-142HV32FIWR-142HV32",
                 image_url: "https://via.placeholder.com/400x300?text=FOR-142HV32"
+            },
+            {
+                area: 20, 
+                height: "一般高度", 
+                environment: "頂樓或鐵皮, 人員密度高, 動態活動", 
+                capacity: 18.2, 
+                recommended_capacity: "專人協助", 
+                recommended_model: "專人協助",
+                image_url: "https://via.placeholder.com/400x300?text=專人協助"
+            },
+            {
+                area: 20, 
+                height: "挑高(超過3.5m)", 
+                environment: "東西曬, 頂樓或鐵皮", 
+                capacity: 19.3, 
+                recommended_capacity: "專人協助", 
+                recommended_model: "專人協助",
+                image_url: "https://via.placeholder.com/400x300?text=專人協助"
             },
             {
                 area: 25, 
@@ -229,37 +542,101 @@
             }
         ];
 
+        // 依據選擇條件計算冷房能力
+        function calculateCapacity(area, height, envConditions) {
+            // 基礎計算：坪數 * 0.7
+            var baseCapacity = area * 0.7;
+            
+            // 高度係數
+            var heightFactor = 1.0;
+            if (height === "挑高(超過3m)") {
+                heightFactor = 1.1;
+            } else if (height === "挑高(超過3.5m)") {
+                heightFactor = 1.2;
+            }
+            
+            // 環境因素總和
+            var envFactor = 0;
+            for (var i = 0; i < envConditions.length; i++) {
+                if (envConditions[i] === "東西曬") envFactor += 0.1;
+                if (envConditions[i] === "頂樓或鐵皮") envFactor += 0.15;
+                if (envConditions[i] === "大片落地窗") envFactor += 0.1;
+                if (envConditions[i] === "人員密度高") envFactor += 0.05;
+                if (envConditions[i] === "動態活動") envFactor += 0.1;
+                if (envConditions[i] === "其他熱源") envFactor += 0.05;
+            }
+            
+            // 計算總冷房能力
+            var totalCapacity = baseCapacity * heightFactor * (1 + envFactor);
+            return Math.round(totalCapacity * 10) / 10;  // 四捨五入到小數點一位
+        }
+
         // 搜尋最符合條件的冷氣機型號
         function findBestMatch(area, height, envConditions) {
+            // 先計算需要的冷房能力
+            var calculatedCapacity = calculateCapacity(area, height, envConditions);
+            
+            // 如果計算能力超過18.2，建議專人協助
+            if (calculatedCapacity > 18.2) {
+                return {
+                    capacity: calculatedCapacity,
+                    recommended_capacity: "專人協助",
+                    recommended_model: "專人協助",
+                    image_url: "https://via.placeholder.com/400x300?text=專人協助"
+                };
+            }
+            
             var bestMatch = null;
             var minDiff = Number.MAX_SAFE_INTEGER;
             
+            // 尋找最接近的型號
             for (var i = 0; i < airConditioners.length; i++) {
                 var ac = airConditioners[i];
                 
-                // 坪數差異
-                var areaDiff = Math.abs(ac.area - area);
-                
-                // 高度匹配
-                var heightMatch = (ac.height === height);
-                
-                // 環境條件匹配度
-                var envMatch = true;
-                for (var j = 0; j < envConditions.length; j++) {
-                    if (ac.environment.indexOf(envConditions[j]) === -1 && ac.environment !== "無") {
-                        envMatch = false;
-                        break;
+                if (ac.recommended_capacity !== "專人協助") {
+                    var diff = Math.abs(ac.recommended_capacity - calculatedCapacity);
+                    
+                    // 找出能力最接近的型號
+                    if (diff < minDiff && ac.recommended_capacity >= calculatedCapacity) {
+                        minDiff = diff;
+                        bestMatch = ac;
                     }
-                }
-                
-                // 如果高度匹配且環境條件匹配度較高，且坪數差異較小，則為最佳匹配
-                if (heightMatch && envMatch && areaDiff < minDiff) {
-                    minDiff = areaDiff;
-                    bestMatch = ac;
                 }
             }
             
-            return bestMatch;
+            // 如果找不到合適的型號，使用備選邏輯尋找最接近的
+            if (bestMatch === null) {
+                for (var i = 0; i < airConditioners.length; i++) {
+                    var ac = airConditioners[i];
+                    
+                    if (ac.recommended_capacity !== "專人協助") {
+                        var diff = Math.abs(ac.recommended_capacity - calculatedCapacity);
+                        
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            bestMatch = ac;
+                        }
+                    }
+                }
+            }
+            
+            // 如果仍找不到合適型號，返回專人協助
+            if (bestMatch === null) {
+                return {
+                    capacity: calculatedCapacity,
+                    recommended_capacity: "專人協助",
+                    recommended_model: "專人協助",
+                    image_url: "https://via.placeholder.com/400x300?text=專人協助"
+                };
+            }
+            
+            // 返回找到的最佳匹配，但加上實際計算的capacity
+            return {
+                capacity: calculatedCapacity,
+                recommended_capacity: bestMatch.recommended_capacity,
+                recommended_model: bestMatch.recommended_model,
+                image_url: bestMatch.image_url
+            };
         }
 
         $(document).ready(function() {
@@ -283,19 +660,38 @@
                 if ($('#env6').is(':checked')) envConditions.push('其他熱源');
                 
                 // 查找最符合條件的冷氣機
-                var bestMatch = findBestMatch(area, height, envConditions);
+                var result = findBestMatch(area, height, envConditions);
+                
+                // 顯示所選條件
+                var optionsHtml = '';
+                optionsHtml += '<div class="pill"><i class="fas fa-home me-1"></i>' + area + '坪</div>';
+                optionsHtml += '<div class="pill"><i class="fas fa-arrows-alt-v me-1"></i>' + height + '</div>';
+                
+                envConditions.forEach(function(condition) {
+                    optionsHtml += '<div class="pill"><i class="fas fa-check me-1"></i>' + condition + '</div>';
+                });
+                
+                $('#selected-options').html(optionsHtml);
                 
                 // 顯示結果
-                if (bestMatch && bestMatch.recommended_capacity !== "專人協助") {
-                    $('#result-image').attr('src', bestMatch.image_url);
-                    $('#result-capacity').text(bestMatch.capacity);
-                    $('#result-model').text(bestMatch.recommended_model);
+                if (result.recommended_capacity !== "專人協助") {
+                    $('#result-image').attr('src', result.image_url);
+                    $('#result-capacity').text(result.capacity);
+                    $('#result-model').text(result.recommended_model);
                     
                     $('#results-container').removeClass('result-hidden');
                     $('#no-results').addClass('result-hidden');
+                    
+                    // 添加動畫效果
+                    $('#results-container').css('opacity', '0');
+                    $('#results-container').animate({opacity: 1}, 500);
                 } else {
                     $('#results-container').addClass('result-hidden');
                     $('#no-results').removeClass('result-hidden');
+                    
+                    // 添加動畫效果
+                    $('#no-results').css('opacity', '0');
+                    $('#no-results').animate({opacity: 1}, 500);
                 }
             });
         });
