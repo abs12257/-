@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冷氣能力計算器展示</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">冷氣能力計算結果查詢系統</h1>
+        <p class="text-center mb-4">查詢不同坪數、高度和環境條件下的冷氣機推薦</p>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="filter-card">
+                    <h4>篩選條件</h4>
+                    
+                    <div class="mb-3">
+                        <label for="area-range" class="form-label">坪數: <span id="area-value">10</span></label>
+                        <input type="range" class="form-range" id="area-range" min="1" max="50" value="10">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">高度:</label>
+                        <select id="height-select" class="form-select">
+                            <option value="all">全部</option>
+                            <option value="一般高度">一般高度</option>
+                            <option value="挑高(超過3m)">挑高(超過3m)</option>
+                            <option value="挑高(超過3.5m)">挑高(超過3.5m)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">環境條件:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env1">
+                            <label class="form-check-label" for="env1">東西曬</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env2">
+                            <label class="form-check-label" for="env2">頂樓或鐵皮</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env3">
+                            <label class="form-check-label" for="env3">大片落地窗</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env4">
+                            <label class="form-check-label" for="env4">人員密度高</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env5">
+                            <label class="form-check-label" for="env5">動態活動</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env6">
+                            <label class="form-check-label" for="env6">其他熱源</label>
+                        </div>
+                    </div>
+                    
+                    <button id="search-btn" class="btn btn-primary w-100">搜尋</button>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <table id="results-table" class="display table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>坪數</th>
+                            <th>高度</th>
+                            <th>環境因素</th>
+                            <th>計算能力</th>
+                            <th>能力推薦</th>
+                            <th>型號推薦</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 資料將由JavaScript動態載入 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
