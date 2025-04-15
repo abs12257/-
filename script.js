@@ -68,14 +68,9 @@ $(document).ready(function() {
         productModal.show();
     });
     
-    // 坪數滑桿
-    $('#area-range').on('input', function() {
-        $('#area-value').text($(this).val());
-    });
-    
-    // 搜尋按鈕
+    // 搜尋按鈕 - 使用下拉選單值
     $('#search-btn').click(function() {
-        var area = $('#area-range').val();
+        var area = $('#area-select').val();
         var height = $('#height-select').val();
         
         // 重置搜尋
