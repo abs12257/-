@@ -55,4 +55,276 @@
             background-color: #0056b3;
             color: white;
             padding: 5px 10px;
-            border-radius
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .result-heading {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .result-specs {
+            margin-top: 10px;
+            color: #555;
+        }
+        .result-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">冷氣能力計算結果查詢系統</h1>
+        <p class="text-center mb-4">查詢不同坪數、高度和環境條件下的冷氣機推薦</p>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="filter-card">
+                    <h4>篩選條件</h4>
+                    
+                    <div class="mb-3">
+                        <label for="area-select" class="form-label">坪數:</label>
+                        <select id="area-select" class="form-select">
+                            <option value="1">1坪</option>
+                            <option value="2">2坪</option>
+                            <option value="3">3坪</option>
+                            <option value="4">4坪</option>
+                            <option value="5">5坪</option>
+                            <option value="6">6坪</option>
+                            <option value="7">7坪</option>
+                            <option value="8">8坪</option>
+                            <option value="9">9坪</option>
+                            <option value="10" selected>10坪</option>
+                            <option value="15">15坪</option>
+                            <option value="20">20坪</option>
+                            <option value="25">25坪</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">高度:</label>
+                        <select id="height-select" class="form-select">
+                            <option value="一般高度" selected>一般高度</option>
+                            <option value="挑高(超過3m)">挑高(超過3m)</option>
+                            <option value="挑高(超過3.5m)">挑高(超過3.5m)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">環境條件:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env1">
+                            <label class="form-check-label" for="env1">東西曬</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env2">
+                            <label class="form-check-label" for="env2">頂樓或鐵皮</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env3">
+                            <label class="form-check-label" for="env3">大片落地窗</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env4">
+                            <label class="form-check-label" for="env4">人員密度高</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env5">
+                            <label class="form-check-label" for="env5">動態活動</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="env6">
+                            <label class="form-check-label" for="env6">其他熱源</label>
+                        </div>
+                    </div>
+                    
+                    <button id="search-btn" class="btn btn-primary w-100">搜尋</button>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div id="results-container" class="result-hidden">
+                    <h4 class="result-heading">計算結果</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="result-image" src="" class="product-image" alt="冷氣機產品圖">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="capacity-badge">計算能力: <span id="result-capacity"></span> kW</div>
+                            <h5 class="product-title" id="result-model"></h5>
+                            <p>適用環境: <span id="result-environment"></span></p>
+                            <p>適用坪數: <span id="result-area"></span></p>
+                            <p class="result-specs" id="result-specs"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="no-results" class="text-center p-5 result-hidden">
+                    <h4>您目前的需求需要專業協助</h4>
+                    <p>所選條件較為特殊，建議由專業人員進行現場評估。</p>
+                    <button class="btn btn-primary">聯絡專員</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 冷氣機型號資料
+        var airConditioners = [
+            {
+                area: 5, 
+                height: "一般高度", 
+                environment: "無", 
+                capacity: 3.5, 
+                recommended_capacity: 3.6, 
+                recommended_model: "FOR-321HA32FIWR-321HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-321HA32",
+                specs: "適用5坪、一般高度空間，能效比3.6，節能省電，靜音運轉"
+            },
+            {
+                area: 5, 
+                height: "一般高度", 
+                environment: "東西曬", 
+                capacity: 3.9, 
+                recommended_capacity: 4.2, 
+                recommended_model: "FOR-351HA32FIWR-351HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-351HA32",
+                specs: "適用5坪、一般高度但有東西曬的空間，強效冷房，舒適送風"
+            },
+            {
+                area: 10, 
+                height: "一般高度", 
+                environment: "無", 
+                capacity: 7.0, 
+                recommended_capacity: 7.2, 
+                recommended_model: "FOR-631HA32FIWR-631HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-631HA32",
+                specs: "適用10坪標準空間，高效能設計，智慧變頻，省電環保"
+            },
+            {
+                area: 10, 
+                height: "一般高度", 
+                environment: "東西曬", 
+                capacity: 7.7, 
+                recommended_capacity: 8.0, 
+                recommended_model: "FOR-701HA32FIWR-701HA32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-701HA32",
+                specs: "適用10坪有東西曬的空間，具備抗紫外線設計，快速降溫功能"
+            },
+            {
+                area: 10, 
+                height: "一般高度", 
+                environment: "頂樓或鐵皮", 
+                capacity: 8.1, 
+                recommended_capacity: 10.5, 
+                recommended_model: "FOR-105HV32FIWR-105HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32",
+                specs: "適用10坪頂樓或鐵皮空間，特殊強化設計，可承受高溫環境"
+            },
+            {
+                area: 15, 
+                height: "一般高度", 
+                environment: "無", 
+                capacity: 10.5, 
+                recommended_capacity: 10.5, 
+                recommended_model: "FOR-105HV32FIWR-105HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-105HV32",
+                specs: "適用15坪標準空間，高效變頻壓縮機，低噪音設計，節能省電"
+            },
+            {
+                area: 20, 
+                height: "一般高度", 
+                environment: "無", 
+                capacity: 14.0, 
+                recommended_capacity: 14.8, 
+                recommended_model: "FOR-142HV32FIWR-142HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-142HV32",
+                specs: "適用20坪大空間，超大風量，四面出風設計，快速降溫"
+            },
+            {
+                area: 25, 
+                height: "一般高度", 
+                environment: "無", 
+                capacity: 17.5, 
+                recommended_capacity: 17.6, 
+                recommended_model: "FOR-160HV32FIWR-160HV32",
+                image_url: "https://via.placeholder.com/400x300?text=FOR-160HV32",
+                specs: "適用25坪大空間，本系列最大冷房能力，智慧變頻，節能環保"
+            }
+        ];
+
+        // 搜尋最符合條件的冷氣機型號
+        function findBestMatch(area, height, envConditions) {
+            var bestMatch = null;
+            var minDiff = Number.MAX_SAFE_INTEGER;
+            
+            for (var i = 0; i < airConditioners.length; i++) {
+                var ac = airConditioners[i];
+                
+                // 坪數差異
+                var areaDiff = Math.abs(ac.area - area);
+                
+                // 高度匹配
+                var heightMatch = (ac.height === height);
+                
+                // 環境條件匹配度
+                var envMatch = true;
+                for (var j = 0; j < envConditions.length; j++) {
+                    if (ac.environment.indexOf(envConditions[j]) === -1 && ac.environment !== "無") {
+                        envMatch = false;
+                        break;
+                    }
+                }
+                
+                // 如果高度匹配且環境條件匹配度較高，且坪數差異較小，則為最佳匹配
+                if (heightMatch && envMatch && areaDiff < minDiff) {
+                    minDiff = areaDiff;
+                    bestMatch = ac;
+                }
+            }
+            
+            return bestMatch;
+        }
+
+        $(document).ready(function() {
+            // 搜尋按鈕點擊事件
+            $('#search-btn').click(function() {
+                var area = parseInt($('#area-select').val());
+                var height = $('#height-select').val();
+                
+                // 收集勾選的環境條件
+                var envConditions = [];
+                if ($('#env1').is(':checked')) envConditions.push('東西曬');
+                if ($('#env2').is(':checked')) envConditions.push('頂樓或鐵皮');
+                if ($('#env3').is(':checked')) envConditions.push('大片落地窗');
+                if ($('#env4').is(':checked')) envConditions.push('人員密度高');
+                if ($('#env5').is(':checked')) envConditions.push('動態活動');
+                if ($('#env6').is(':checked')) envConditions.push('其他熱源');
+                
+                // 查找最符合條件的冷氣機
+                var bestMatch = findBestMatch(area, height, envConditions);
+                
+                // 顯示結果
+                if (bestMatch && bestMatch.recommended_capacity !== "專人協助") {
+                    $('#result-image').attr('src', bestMatch.image_url);
+                    $('#result-capacity').text(bestMatch.capacity);
+                    $('#result-model').text(bestMatch.recommended_model);
+                    $('#result-environment').text(bestMatch.environment || "一般環境");
+                    $('#result-area').text(bestMatch.area + "坪");
+                    $('#result-specs').text(bestMatch.specs);
+                    
+                    $('#results-container').removeClass('result-hidden');
+                    $('#no-results').addClass('result-hidden');
+                } else {
+                    $('#results-container').addClass('result-hidden');
+                    $('#no-results').removeClass('result-hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
